@@ -1,0 +1,72 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include "turtle.h"
+#define iter 3
+
+
+int case_f(char* new_tab, int current_index_in_new_tab) {
+	new_tab[current_index_in_new_tab] = 'F';
+	new_tab[current_index_in_new_tab + 1] = '+';
+	new_tab[current_index_in_new_tab + 2] = 'F';
+	new_tab[current_index_in_new_tab + 3] = '-';
+	new_tab[current_index_in_new_tab + 4] = 'F';
+	new_tab[current_index_in_new_tab + 5] = '-';
+	new_tab[current_index_in_new_tab + 6] = 'F';
+	new_tab[current_index_in_new_tab + 7] = '+';
+	new_tab[current_index_in_new_tab + 8] = 'F';
+	current_index_in_new_tab += 8;
+	return current_index_in_new_tab;
+}
+
+
+int one_iteration(char* chars, int len_of_chars,char * new_tab) {
+	int current_index_in_new_tab = 0;
+	for (int i = 0; i < len_of_chars; i++) {
+		if (chars[i] == 'F') {
+			current_index_in_new_tab = case_f(new_tab,current_index_in_new_tab);
+			current_index_in_new_tab += 1;
+		}
+		else {
+			new_tab[current_index_in_new_tab] = chars[i];
+			current_index_in_new_tab += 1;
+		}
+
+	}
+	return current_index_in_new_tab;
+}
+int main() {
+	char* chars = (char*)malloc(sizeof(char*) * 1);
+	chars[0] = 'F';
+	char* temp_tab;
+	int len_of_chars = 1;
+	for (int i = 0; i < iter; i++) {
+		temp_tab = (char*)malloc(sizeof(char*) * 9 * len_of_chars);
+		len_of_chars = one_iteration(chars, len_of_chars, temp_tab) ;
+		chars = temp_tab;
+
+	}
+	turtle_init(600, 600);
+	turtle_pen_down();
+	for (int i = 0; i < len_of_chars; i++) {
+
+		if (chars[i] == '+' || chars[i] == '-')
+			printf("%c", chars[i]);
+		if (chars[i] == 'F') {
+			turtle_forward(4);
+		}
+		if (chars[i] == '-') {
+			turtle_turn_right(90.00);
+		}
+		if (chars[i] == '+') {
+			turtle_turn_left(90.00);
+		}
+	}
+	turtle_save_bmp("koch.bmp");
+	turtle_pen_up();
+	free(chars);
+
+	return 0;
+
+
+
+}
